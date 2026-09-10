@@ -1,0 +1,7 @@
+data/
+counter.txt
+flask.log
+ngrok.log
+__pycache__/
+static2/images/*.jpg
+static2/images/*.jpg

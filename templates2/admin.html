@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>管理者画面</title>
+
+<style>
+
+body{
+
+    font-family:sans-serif;
+    margin:30px;
+}
+
+.card{
+
+    border:1px solid black;
+    padding:20px;
+    margin:20px;
+    width:350px;
+}
+
+img{
+
+    width:300px;
+}
+
+.delete{
+
+    width:120px;
+    height:40px;
+    font-size:18px;
+}
+
+.reset{
+
+    width:300px;
+    height:60px;
+    font-size:24px;
+    margin-bottom:30px;
+}
+
+.container{
+
+    display:flex;
+    flex-wrap:wrap;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>管理者画面</h1>
+
+<a href="/reset_all"
+onclick="return confirm('本当に全て削除しますか？')">
+
+<button class="reset">
+
+すべての落とし物を削除
+
+</button>
+
+</a>
+
+<div class="container">
+
+{% for data in data_list %}
+
+<div class="card">
+
+<img src="/static2/images/{{ data.image }}">
+
+<p>登録番号：{{ data.number }}</p>
+
+<p>発見場所：{{ data.place }}</p>
+
+<p>詳細場所：{{ data.detail }}</p>
+
+<p>年月日：{{ data.date }}</p>
+
+<p>時刻：{{ data.time }}</p>
+
+<a href="/delete/{{ data.number }}"
+onclick="return confirm('本当に削除しますか？')">
+
+<button class="delete">
+
+削除
+
+</button>
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>落とし物登録画面</title>
+
+    <style>
+
+        body{
+
+            font-family: sans-serif;
+            margin: 40px;
+        }
+
+        select,input{
+
+            width: 250px;
+            height: 45px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .timebox{
+
+            width: 100px;
+        }
+
+        button{
+
+            width: 220px;
+            height: 60px;
+            font-size: 24px;
+            margin-top: 40px;
+            float: right;
+        }
+
+        .error{
+
+            color: red;
+            font-size: 14px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>落とし物登録画面</h1>
+
+    <form action="/register" method="post" onsubmit="return checkForm()">
+
+        <h2>発見場所</h2>
+
+        <select id="place" name="place" onchange="changeDetail()">
+
+            <option value="体育館">体育館</option>
+            <option value="実習棟">実習棟</option>
+            <option value="教室棟">教室棟</option>
+            <option value="管理棟">管理棟</option>
+            <option value="外">外</option>
+
+        </select>
+
+        <h2>詳細場所</h2>
+
+        <select id="detail" name="detail"></select>
+
+        <h2>年月日</h2>
+
+        <input type="date" name="date">
+
+        <p id="dateError" class="error"></p>
+
+        <h2>見つけた時刻</h2>
+
+        <select class="timebox" name="hour">
+
+            
+
+            <option value="00">00</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+
+        </select>
+
+        ：
+
+        <select class="timebox" name="minute">
+
+            
+
+            <option value="00">00</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+            <option value="32">32</option>
+            <option value="33">33</option>
+            <option value="34">34</option>
+            <option value="35">35</option>
+            <option value="36">36</option>
+            <option value="37">37</option>
+            <option value="38">38</option>
+            <option value="39">39</option>
+            <option value="40">40</option>
+            <option value="41">41</option>
+            <option value="42">42</option>
+            <option value="43">43</option>
+            <option value="44">44</option>
+            <option value="45">45</option>
+            <option value="46">46</option>
+            <option value="47">47</option>
+            <option value="48">48</option>
+            <option value="49">49</option>
+            <option value="50">50</option>
+            <option value="51">51</option>
+            <option value="52">52</option>
+            <option value="53">53</option>
+            <option value="54">54</option>
+            <option value="55">55</option>
+            <option value="56">56</option>
+            <option value="57">57</option>
+            <option value="58">58</option>
+            <option value="59">59</option>
+
+        </select>
+
+        <p id="timeError" class="error"></p>
+
+        <br><br>
+
+        <button type="submit">確定</button>
+
+    </form>
+
+<script>
+
+function changeDetail(){
+
+    let place = document.getElementById("place").value;
+
+    let detail = document.getElementById("detail");
+
+    detail.innerHTML = "";
+
+    let options = [];
+
+    if(place == "体育館"){
+
+        options = [
+            "フロア",
+            "トイレ",
+            "女子更衣室",
+            "男子更衣室",
+            "柔道場",
+            "フェンシング場",
+            "レスリング場"
+        ];
+    }
+
+    else if(place == "実習棟"){
+
+        options = [
+            "J科実習棟",
+            "K科実習棟",
+            "M科実習棟",
+            "F科実習棟",
+            "EC科実習棟"
+        ];
+    }
+
+    else if(place == "教室棟"){
+
+        options = [
+            "J1教室前",
+            "J2教室前",
+            "J3教室前",
+            "M1教室前",
+            "M2教室前",
+            "M3教室前",
+            "F1教室前",
+            "F2教室前",
+            "F3教室前",
+            "EC1教室前",
+            "EC2教室前",
+            "EC3教室前",
+            "K1教室前",
+            "K2教室前",
+            "K3教室前"
+        ];
+    }
+
+    else if(place == "管理棟"){
+
+        options = [
+            "3階職員室前",
+            "2階職員室前",
+            "音楽室",
+            "視聴覚室",
+            "理科室"
+        ];
+    }
+
+    else if(place == "外"){
+
+    options = [
+        "野球場",
+        "ハンドボール場",
+        "サッカーグラウンド",
+        "陸上競技場",
+        "駐車場",
+        "駐輪場"
+    ];
+}
+
+    for(let i = 0; i < options.length; i++){
+
+        let option = document.createElement("option");
+
+        option.text = options[i];
+        option.value = options[i];
+
+        detail.add(option);
+    }
+}
+
+function checkForm(){
+
+    let date = document.getElementsByName("date")[0].value;
+
+    let hour = document.getElementsByName("hour")[0].value;
+
+    let minute = document.getElementsByName("minute")[0].value;
+
+    document.getElementById("dateError").innerHTML = "";
+
+    document.getElementById("timeError").innerHTML = "";
+
+    let ok = true;
+
+    if(date == ""){
+
+        document.getElementById("dateError").innerHTML =
+        "※年月日を入力してください";
+
+        ok = false;
+    }
+
+    if(hour == "" || minute == ""){
+
+        document.getElementById("timeError").innerHTML =
+        "※時刻を入力してください";
+
+        ok = false;
+    }
+
+    return ok;
+}
+
+changeDetail();
+
+</script>
+
+</body>
+
+</html>
