@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
-    
+
     <meta http-equiv="refresh" content="900">
 
     <title>生徒用画面</title>
@@ -16,46 +16,45 @@
             margin: 0;
             font-family: sans-serif;
             background-color: #f0f0f0;
+
         }
 
         h1{
 
             text-align: center;
             padding: 20px;
+
         }
 
         .container{
 
             display: grid;
-
             grid-template-columns: repeat(3, 1fr);
-
             gap: 20px;
-
             padding: 20px;
+
         }
 
         .card{
 
             background-color: white;
-
             border-radius: 10px;
-
             padding: 15px;
-
             box-shadow: 0 0 5px gray;
+
         }
 
         img{
 
             width: 100%;
-
             border-radius: 10px;
+
         }
 
         p{
 
             font-size: 18px;
+
         }
 
     </style>
@@ -72,7 +71,7 @@
 
         <div class="card">
 
-            <img src="/static2/images/{{ data.image }}">
+            <img src="{{ data.image }}">
 
             <p>登録番号：{{ data.number }}</p>
 

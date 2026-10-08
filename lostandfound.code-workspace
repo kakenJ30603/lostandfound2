@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../lostandfound"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "lostandfound"
+	}
+}

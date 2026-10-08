@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, redirect
 import os
-import cv2
 
 app = Flask(
     __name__,
@@ -8,23 +7,19 @@ app = Flask(
     static_folder="static2"
 )
 
-IMAGE_FOLDER = "static2/images"
 DATA_FOLDER = "data"
 
-os.makedirs(IMAGE_FOLDER, exist_ok=True)
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
 counter_file = "counter.txt"
 
 if not os.path.exists(counter_file):
-
     with open(counter_file, "w") as f:
         f.write("1")
 
 
 @app.route('/')
 def home():
-
     return render_template("index2.html")
 
 
@@ -44,7 +39,6 @@ def student():
             if len(lines) >= 6:
 
                 data = {
-
                     "number": lines[0].strip(),
                     "place": lines[1].strip(),
                     "detail": lines[2].strip(),
@@ -55,7 +49,10 @@ def student():
 
                 data_list.append(data)
 
-    return render_template("student2.html", data_list=data_list)
+    return render_template(
+        "student2.html",
+        data_list=data_list
+    )
 
 
 @app.route('/admin')
@@ -74,7 +71,6 @@ def admin():
             if len(lines) >= 6:
 
                 data = {
-
                     "number": lines[0].strip(),
                     "place": lines[1].strip(),
                     "detail": lines[2].strip(),
@@ -85,7 +81,10 @@ def admin():
 
                 data_list.append(data)
 
-    return render_template("admin.html", data_list=data_list)
+    return render_template(
+        "admin.html",
+        data_list=data_list
+    )
 
 
 @app.route('/register', methods=['POST'])
@@ -109,46 +108,29 @@ def register():
 
     time = hour + ":" + minute
 
-    camera = cv2.VideoCapture(0)
+    # Cloudinaryに保存された画像のURL
+    image_url = request.form.get('image_url', '')
 
-    if not camera.isOpened():
-
-        return "カメラを開けません"
-
-    ret, frame = camera.read()
-
-    image_name = f"{counter}.jpg"
-
-    if ret:
-
-        cv2.imwrite(
-            os.path.join(IMAGE_FOLDER, image_name),
-            frame
-        )
-
-    else:
-
-        camera.release()
-
-        return "撮影失敗"
-
-    camera.release()
+    if image_url == "":
+        return "写真のアップロードに失敗しました"
 
     text_name = f"{counter}.txt"
 
-    with open(os.path.join(DATA_FOLDER, text_name), "w") as f:
+    with open(
+        os.path.join(DATA_FOLDER, text_name),
+        "w"
+    ) as f:
 
         f.write(f"{counter}\n")
         f.write(f"{place}\n")
         f.write(f"{detail}\n")
         f.write(f"{date}\n")
         f.write(f"{time}\n")
-        f.write(f"{image_name}\n")
+        f.write(f"{image_url}\n")
 
     counter += 1
 
     with open(counter_file, "w") as f:
-
         f.write(str(counter))
 
     return render_template("index2.html")
@@ -157,14 +139,13 @@ def register():
 @app.route('/delete/<number>')
 def delete(number):
 
-    txt_file = os.path.join(DATA_FOLDER, f"{number}.txt")
-    img_file = os.path.join(IMAGE_FOLDER, f"{number}.jpg")
+    txt_file = os.path.join(
+        DATA_FOLDER,
+        f"{number}.txt"
+    )
 
     if os.path.exists(txt_file):
         os.remove(txt_file)
-
-    if os.path.exists(img_file):
-        os.remove(img_file)
 
     return redirect("/admin")
 
@@ -174,25 +155,22 @@ def reset_all():
 
     for file in os.listdir(DATA_FOLDER):
 
-        file_path = os.path.join(DATA_FOLDER, file)
+        file_path = os.path.join(
+            DATA_FOLDER,
+            file
+        )
 
         if os.path.isfile(file_path):
-
-            os.remove(file_path)
-
-    for file in os.listdir(IMAGE_FOLDER):
-
-        file_path = os.path.join(IMAGE_FOLDER, file)
-
-        if os.path.isfile(file_path):
-
             os.remove(file_path)
 
     with open(counter_file, "w") as f:
-
         f.write("1")
 
     return redirect("/admin")
 
 
-app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(
+        host='0.0.0.0',
+        port=5000
+    )
