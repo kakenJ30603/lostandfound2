@@ -1,92 +1,84 @@
+```html
 <!DOCTYPE html>
-<html>
-
+<html lang="ja">
 <head>
-
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>落とし物登録画面</title>
 
     <style>
-
-        body{
+        body {
             font-family: sans-serif;
-            margin: 40px;
+            margin: 30px;
+            max-width: 700px;
         }
 
-        select,input{
+        select, input {
             width: 250px;
+            max-width: 100%;
             height: 45px;
             font-size: 18px;
             margin-top: 10px;
         }
 
-        .timebox{
+        .timebox {
             width: 100px;
         }
 
-        button{
+        button {
             width: 220px;
             height: 60px;
             font-size: 24px;
-            margin-top: 40px;
-            float: right;
+            margin-top: 30px;
+            cursor: pointer;
         }
 
-        .error{
+        button:disabled {
+            opacity: 0.5;
+            cursor: wait;
+        }
+
+        .error {
             color: red;
             font-size: 14px;
         }
 
-        #camera{
+        #camera, #canvas {
             display: none;
         }
 
-        #status{
+        #status {
             color: blue;
             font-size: 18px;
-            margin-top: 20px;
+            overflow-wrap: anywhere;
         }
-
     </style>
-
 </head>
 
 <body>
-
     <h1>落とし物登録画面</h1>
 
     <form id="registerForm" action="/register" method="post">
-
         <h2>発見場所</h2>
 
-        <select id="place" name="place" onchange="changeDetail()">
-
+        <select id="place" name="place" onchange="changeDetail()" required>
             <option value="体育館">体育館</option>
             <option value="実習棟">実習棟</option>
             <option value="教室棟">教室棟</option>
             <option value="管理棟">管理棟</option>
             <option value="外">外</option>
-
         </select>
 
-
         <h2>詳細場所</h2>
-
-        <select id="detail" name="detail"></select>
-
+        <select id="detail" name="detail" required></select>
 
         <h2>年月日</h2>
-
-        <input type="date" name="date">
-
+        <input type="date" name="date" required>
         <p id="dateError" class="error"></p>
-
 
         <h2>見つけた時刻</h2>
 
-        <select class="timebox" name="hour">
-
+        <select class="timebox" name="hour" required>
             <option value="00">00</option>
             <option value="01">01</option>
             <option value="02">02</option>
@@ -111,13 +103,11 @@
             <option value="21">21</option>
             <option value="22">22</option>
             <option value="23">23</option>
-
         </select>
 
         ：
-
-        <select class="timebox" name="minute">
-
+        
+        <select class="timebox" name="minute" required>
             <option value="00">00</option>
             <option value="01">01</option>
             <option value="02">02</option>
@@ -178,334 +168,203 @@
             <option value="57">57</option>
             <option value="58">58</option>
             <option value="59">59</option>
-
         </select>
 
         <p id="timeError" class="error"></p>
 
-
-        <!-- Cloudinaryから受け取った画像URLを入れる場所 -->
+        <!-- Cloudinaryに保存した写真のURL -->
         <input type="hidden" name="image_url" id="image_url">
 
-
         <video id="camera" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
 
-        <canvas id="canvas" style="display:none;"></canvas>
+        <p id="status" role="status"></p>
 
-
-        <p id="status"></p>
-
-
-        <br><br>
-
-        <button type="submit" id="submitButton">
-            確定
-        </button>
-
+        <button type="submit" id="submitButton">確定</button>
     </form>
 
-
-<script>
-
-
-/* =========================
-   詳細場所
-========================= */
-
-function changeDetail(){
-
-    let place = document.getElementById("place").value;
-
-    let detail = document.getElementById("detail");
-
-    detail.innerHTML = "";
-
-    let options = [];
-
-
-    if(place == "体育館"){
-
-        options = [
-            "フロア",
-            "トイレ",
-            "女子更衣室",
-            "男子更衣室",
-            "柔道場",
-            "フェンシング場",
-            "レスリング場"
-        ];
-
-    }
-
-
-    else if(place == "実習棟"){
-
-        options = [
-            "J科実習棟",
-            "K科実習棟",
-            "M科実習棟",
-            "F科実習棟",
-            "EC科実習棟"
-        ];
-
-    }
-
-
-    else if(place == "教室棟"){
-
-        options = [
-            "J1教室前",
-            "J2教室前",
-            "J3教室前",
-            "M1教室前",
-            "M2教室前",
-            "M3教室前",
-            "F1教室前",
-            "F2教室前",
-            "F3教室前",
-            "EC1教室前",
-            "EC2教室前",
-            "EC3教室前",
-            "K1教室前",
-            "K2教室前",
-            "K3教室前"
-        ];
-
-    }
-
-
-    else if(place == "管理棟"){
-
-        options = [
-            "3階職員室前",
-            "2階職員室前",
-            "音楽室",
-            "視聴覚室",
-            "理科室"
-        ];
-
-    }
-
-
-    else if(place == "外"){
-
-        options = [
-            "野球場",
-            "ハンドボール場",
-            "サッカーグラウンド",
-            "陸上競技場",
-            "駐車場",
-            "駐輪場"
-        ];
-
-    }
-
-
-    for(let i = 0; i < options.length; i++){
-
-        let option = document.createElement("option");
-
-        option.text = options[i];
-
-        option.value = options[i];
-
-        detail.add(option);
-
-    }
-
-}
-
-
-/* =========================
-   Cloudinaryへ写真を送る
-========================= */
-
-async function uploadToCloudinary(){
-
-    const video = document.getElementById("camera");
-
-    const canvas = document.getElementById("canvas");
-
-    const status = document.getElementById("status");
-
-
-    status.innerText = "カメラを起動しています……";
-
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: true
-    });
-
-
-    video.srcObject = stream;
-
-
-    await new Promise(resolve => {
-        video.onloadedmetadata = resolve;
-    });
-
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-
-    canvas.width = video.videoWidth;
-
-    canvas.height = video.videoHeight;
-
-
-    const context = canvas.getContext("2d");
-
-    context.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    stream.getTracks().forEach(track => track.stop());
-
-
-    status.innerText = "写真をアップロードしています……";
-
-
-    const blob = await new Promise(resolve => {
-        canvas.toBlob(resolve, "image/jpeg");
-    });
-
-
-    const formData = new FormData();
-
-    formData.append("file", blob, "lost.jpg");
-
-    formData.append(
-        "upload_preset",
-        "lostandfound"
-    );
-
-
-    const response = await fetch(
-        "https://api.cloudinary.com/v1_1/qgl8mr0t/image/upload",
-        {
-            method: "POST",
-            body: formData
-        }
-    );
-
-
-    if(!response.ok){
-
-        throw new Error("Cloudinaryへのアップロードに失敗しました");
-
-    }
-
-
-    const result = await response.json();
-
-
-    document.getElementById("image_url").value =
-        result.secure_url;
-
-
-    status.innerText = "写真の撮影・保存が完了しました。";
-
-}
-
-
-/* =========================
-   登録
-========================= */
-
-document.getElementById("registerForm").addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-
-        let date =
-            document.getElementsByName("date")[0].value;
-
-        let hour =
-            document.getElementsByName("hour")[0].value;
-
-        let minute =
-            document.getElementsByName("minute")[0].value;
-
-
-        document.getElementById("dateError").innerHTML = "";
-
-        document.getElementById("timeError").innerHTML = "";
-
-
-        let ok = true;
-
-
-        if(date == ""){
-
-            document.getElementById("dateError").innerHTML =
-                "※年月日を入力してください";
-
-            ok = false;
-
+    <script>
+        // 発見場所に応じて詳細場所を変更する
+        function changeDetail() {
+            const place = document.getElementById("place").value;
+            const detail = document.getElementById("detail");
+
+            const options = {
+                "体育館": [
+                    "フロア", "トイレ", "女子更衣室", "男子更衣室",
+                    "柔道場", "フェンシング場", "レスリング場"
+                ],
+                "実習棟": [
+                    "J科実習棟", "K科実習棟", "M科実習棟",
+                    "F科実習棟", "EC科実習棟"
+                ],
+                "教室棟": [
+                    "J1教室前", "J2教室前", "J3教室前",
+                    "M1教室前", "M2教室前", "M3教室前",
+                    "F1教室前", "F2教室前", "F3教室前",
+                    "EC1教室前", "EC2教室前", "EC3教室前",
+                    "K1教室前", "K2教室前", "K3教室前"
+                ],
+                "管理棟": [
+                    "3階職員室前", "2階職員室前",
+                    "音楽室", "視聴覚室", "理科室"
+                ],
+                "外": [
+                    "野球場", "ハンドボール場", "サッカーグラウンド",
+                    "陸上競技場", "駐車場", "駐輪場"
+                ]
+            };
+
+            detail.innerHTML = "";
+
+            for (const name of (options[place] || [])) {
+                const option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                detail.appendChild(option);
+            }
         }
 
+        // カメラで撮影し、Cloudinaryへアップロードする
+        async function uploadToCloudinary() {
+            const video = document.getElementById("camera");
+            const canvas = document.getElementById("canvas");
+            const status = document.getElementById("status");
+            let stream;
 
-        if(hour == "" || minute == ""){
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("このページではカメラを使用できません。HTTPSのURLで開いてください。");
+                }
 
-            document.getElementById("timeError").innerHTML =
-                "※時刻を入力してください";
+                status.textContent = "カメラを起動しています……";
 
-            ok = false;
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                });
 
+                video.srcObject = stream;
+
+                await new Promise((resolve, reject) => {
+                    if (video.readyState >= 1 && video.videoWidth > 0) {
+                        resolve();
+                        return;
+                    }
+
+                    const timeout = setTimeout(() => {
+                        reject(new Error("カメラの映像を取得できませんでした。"));
+                    }, 10000);
+
+                    video.onloadedmetadata = () => {
+                        clearTimeout(timeout);
+                        resolve();
+                    };
+                });
+
+                await video.play();
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                if (!video.videoWidth || !video.videoHeight) {
+                    throw new Error("カメラの映像が空です。");
+                }
+
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                const context = canvas.getContext("2d");
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const blob = await new Promise((resolve, reject) => {
+                    canvas.toBlob(result => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(new Error("写真を作成できませんでした。"));
+                        }
+                    }, "image/jpeg", 0.85);
+                });
+
+                status.textContent = "写真をアップロードしています……";
+
+                const formData = new FormData();
+                formData.append("file", blob, "lost.jpg");
+                formData.append("upload_preset", "lostandfound");
+
+                const response = await fetch(
+                    "https://api.cloudinary.com/v1_1/qgl8mr0t/image/upload",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok || !result.secure_url) {
+                    throw new Error(
+                        result.error?.message || "Cloudinaryへのアップロードに失敗しました。"
+                    );
+                }
+
+                document.getElementById("image_url").value = result.secure_url;
+                status.textContent = "写真の保存が完了しました。";
+
+            } finally {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                video.srcObject = null;
+            }
         }
 
+        // 確定ボタンを押したときの処理
+        document.getElementById("registerForm").addEventListener(
+            "submit",
+            async function(event) {
+                event.preventDefault();
 
-        if(!ok){
+                const form = event.currentTarget;
+                const button = document.getElementById("submitButton");
+                const status = document.getElementById("status");
 
-            return;
+                document.getElementById("dateError").textContent = "";
+                document.getElementById("timeError").textContent = "";
 
-        }
+                if (!form.elements.date.value) {
+                    document.getElementById("dateError").textContent =
+                        "※年月日を入力してください";
+                    return;
+                }
 
+                if (!form.elements.hour.value || !form.elements.minute.value) {
+                    document.getElementById("timeError").textContent =
+                        "※時刻を選択してください";
+                    return;
+                }
 
-        const button =
-            document.getElementById("submitButton");
+                button.disabled = true;
 
+                try {
+                    await uploadToCloudinary();
 
-        button.disabled = true;
+                    status.textContent = "登録しています……";
+                    form.submit();
 
+                } catch (error) {
+                    console.error(error);
 
-        try{
+                    status.textContent =
+                        "失敗しました：" + (error.message || "カメラの使用を許可してください。");
 
-            await uploadToCloudinary();
+                    button.disabled = false;
+                }
+            }
+        );
 
-
-            document.getElementById("registerForm").submit();
-
-        }
-
-        catch(error){
-
-            console.error(error);
-
-            document.getElementById("status").innerText =
-                "写真の撮影に失敗しました。カメラの使用を許可してください。";
-
-            button.disabled = false;
-
-        }
-
-    }
-);
-
-
-/* 最初の詳細場所 */
-
-changeDetail();
-
-</script>
-
+        // 最初の詳細場所を設定する
+        changeDetail();
+    </script>
 </body>
-
 </html>
+```
