@@ -138,7 +138,7 @@ def delete(number):
                     "DELETE FROM lost_items WHERE number = %s",
                     (number,)
                 )
-        return redirect("/admin")
+        return redirect("/")
 
     except Exception:
         app.logger.exception("削除エラー")
