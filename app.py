@@ -1,7 +1,8 @@
 
 from flask import Flask, request, render_template, redirect
 import os
-import requests
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(
     __name__,
@@ -9,41 +10,49 @@ app = Flask(
     static_folder="static2"
 )
 
-# Google Apps ScriptのURL
-SHEET_API_URL = (
-    "https://script.google.com/a/macros/ict.shimanet.ed.jp/s/"
-    "AKfycbzT5C1bwpgFxFLxz-n13Ltl6O7LG3raPRI-wICFVP7Trr2wFmQSUK3S5VLW3A0sSBUAVQ/exec"
-)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+def get_connection():
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URLが設定されていません")
+    return psycopg2.connect(DATABASE_URL)
+
+
+def create_table(conn):
+    with conn.cursor() as cur:
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS lost_items (
+                number SERIAL PRIMARY KEY,
+                place TEXT NOT NULL,
+                detail TEXT NOT NULL,
+                found_date TEXT NOT NULL,
+                found_time TEXT NOT NULL,
+                image TEXT NOT NULL
+            )
+        """)
 
 
 def get_data():
-    response = requests.get(
-        SHEET_API_URL,
-        params={"action": "list"},
-        timeout=20
-    )
-    response.raise_for_status()
-    data = response.json()
-
-    if not isinstance(data, list):
-        raise RuntimeError("Googleスプレッドシートからデータを取得できません")
-
-    return data
-
-
-def call_sheet(params):
-    response = requests.get(
-        SHEET_API_URL,
-        params=params,
-        timeout=30
-    )
-    response.raise_for_status()
-    result = response.json()
-
-    if not isinstance(result, dict) or result.get("error"):
-        raise RuntimeError("スプレッドシートへの保存に失敗しました")
-
-    return result
+    conn = get_connection()
+    try:
+        with conn:
+            create_table(conn)
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("""
+                    SELECT
+                        number,
+                        place,
+                        detail,
+                        found_date AS date,
+                        found_time AS time,
+                        image
+                    FROM lost_items
+                    ORDER BY number DESC
+                """)
+                return [dict(row) for row in cur.fetchall()]
+    finally:
+        conn.close()
 
 
 @app.route("/")
@@ -55,13 +64,10 @@ def home():
 def student():
     try:
         data_list = get_data()
-        data_list.reverse()
-
         return render_template(
             "student2.html",
             data_list=data_list
         )
-
     except Exception:
         app.logger.exception("生徒画面のデータ取得エラー")
         return "データを取得できませんでした。設定を確認してください。", 500
@@ -71,13 +77,10 @@ def student():
 def admin():
     try:
         data_list = get_data()
-        data_list.reverse()
-
         return render_template(
             "admin.html",
             data_list=data_list
         )
-
     except Exception:
         app.logger.exception("管理画面のデータ取得エラー")
         return "データを取得できませんでした。設定を確認してください。", 500
@@ -100,39 +103,50 @@ def register():
 
     time = f"{hour}:{minute}"
 
+    conn = None
     try:
-        result = call_sheet({
-            "action": "register",
-            "place": place,
-            "detail": detail,
-            "date": date,
-            "time": time,
-            "image": image_url
-        })
-
-        if not result.get("success"):
-            return "登録に失敗しました", 500
+        conn = get_connection()
+        with conn:
+            create_table(conn)
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO lost_items
+                        (place, detail, found_date, found_time, image)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (place, detail, date, time, image_url))
 
         return redirect("/admin")
 
     except Exception:
         app.logger.exception("登録エラー")
-        return "登録できませんでした。Google Apps Scriptの公開設定を確認してください。", 500
+        return "登録できませんでした。Renderの設定を確認してください。", 500
+
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 @app.route("/delete/<number>")
 def delete(number):
+    conn = None
     try:
-        call_sheet({
-            "action": "delete",
-            "number": number
-        })
-
+        conn = get_connection()
+        with conn:
+            create_table(conn)
+            with conn.cursor() as cur:
+                cur.execute(
+                    "DELETE FROM lost_items WHERE number = %s",
+                    (number,)
+                )
         return redirect("/admin")
 
     except Exception:
         app.logger.exception("削除エラー")
         return "削除できませんでした。設定を確認してください。", 500
+
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 if __name__ == "__main__":
