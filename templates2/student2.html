@@ -4,255 +4,530 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- 300秒（5分）ごとに自動更新 -->
 <meta http-equiv="refresh" content="300">
-
-<title>落とし物一覧 | 学校</title>
+<title>落とし物を探そう | SCHOOL LOST & FOUND</title>
 
 <style>
-* {
-    box-sizing: border-box;
+:root {
+    --navy: #0b3154;
+    --blue: #087eae;
+    --cyan: #7de3f5;
+    --pale: #f0f9ff;
+    --line: #d9eaf4;
+    --muted: #64788a;
 }
+
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: "Noto Sans JP", sans-serif;
-    background: #f0f9ff;
-    color: #263746;
+    font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+    background:
+        radial-gradient(ellipse at top right, #d9f6ff 0, transparent 38%),
+        var(--pale);
+    color: var(--navy);
 }
 
-/* ヘッダー */
-header {
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
+.hero {
+    background: var(--navy);
     color: white;
-    padding: 30px 20px;
-    text-align: center;
+    padding: 34px 20px 30px;
+    position: relative;
+    overflow: hidden;
 }
 
-header h1 {
+.hero::after {
+    content: "FIND IT!";
+    position: absolute;
+    right: -8px;
+    bottom: -24px;
+    font-size: clamp(54px, 12vw, 130px);
+    font-weight: 900;
+    letter-spacing: -5px;
+    color: rgba(125, 227, 245, .08);
+    pointer-events: none;
+}
+
+.hero-inner, main {
+    width: min(1180px, 100%);
+    margin: auto;
+}
+
+.brand {
+    color: var(--cyan);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.hero h1 {
+    font-size: clamp(28px, 5vw, 43px);
+    line-height: 1.35;
+    margin: 12px 0;
+    letter-spacing: .02em;
+}
+
+.hero p {
+    color: #c9dfed;
     margin: 0;
-    font-size: 30px;
-    letter-spacing: 2px;
-}
-
-header p {
-    margin: 10px 0 0;
     font-size: 14px;
 }
 
-/* メイン部分 */
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 25px 20px 40px;
+.hero-tag {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 7px 12px;
+    border: 1px solid #38617e;
+    border-radius: 999px;
+    color: var(--cyan);
+    font-size: 12px;
 }
 
-.info {
+main {
+    padding: 28px 20px 45px;
+}
+
+.search-panel {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(11, 49, 84, .06);
+    margin-bottom: 28px;
+}
+
+.search-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    min-width: 0;
+    flex: 1;
+    border: 1px solid #cbdde9;
+    background: #f8fcff;
+    border-radius: 12px;
+    padding: 13px 15px;
+    font: inherit;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(8, 126, 174, .12);
+}
+
+.clear-button {
+    border: 0;
+    background: var(--navy);
+    color: white;
+    padding: 0 18px;
+    border-radius: 12px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.clear-button:hover { background: var(--blue); }
+
+.filter-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    margin: 17px 0 10px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-button {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #f7fbfe;
+    color: #36556b;
+    padding: 9px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, color .2s, transform .2s;
+}
+
+.filter-button:hover { transform: translateY(-2px); }
+
+.filter-button.active {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--navy);
+}
+
+.list-heading {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+    align-items: end;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
-.info h2 {
-    font-size: 21px;
+.list-heading h2 {
     margin: 0;
+    font-size: 22px;
 }
 
-.count {
-    background: #dbeafe;
-    color: #0369a1;
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
+.list-heading p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 13px;
 }
 
-/* 落とし物カード一覧 */
+.result-count {
+    white-space: nowrap;
+    border-radius: 10px;
+    background: #dff7ff;
+    color: #075985;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
 .container {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
+    gap: 20px;
 }
 
 .card {
     background: white;
-    border: 1px solid #dbeafe;
-    border-radius: 16px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 15px rgba(11, 49, 84, .05);
+    transition: transform .22s ease, box-shadow .22s ease,
+                border-color .22s ease;
+    animation: appear .4s ease both;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.15);
+    transform: translateY(-5px);
+    border-color: #9bdff0;
+    box-shadow: 0 15px 32px rgba(11, 49, 84, .13);
+}
+
+.card[hidden] { display: none; }
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(9px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.photo-wrap {
+    position: relative;
+    background: #eaf7ff;
+    overflow: hidden;
 }
 
 .photo {
     width: 100%;
     height: 220px;
     object-fit: contain;
-    background: #eaf7ff;
     display: block;
+    transition: transform .35s ease;
 }
 
-.card-content {
-    padding: 18px;
+.card:hover .photo { transform: scale(1.035); }
+
+.case-number {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    background: rgba(11, 49, 84, .92);
+    color: white;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-.number {
+.card-content { padding: 17px; }
+
+.place-tag {
     display: inline-block;
-    background: #e0f2fe;
-    color: #0369a1;
-    padding: 5px 11px;
+    background: #e0f7ff;
+    color: #075985;
     border-radius: 7px;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 12px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
 }
 
-.card p {
-    margin: 10px 0;
-    font-size: 15px;
-    line-height: 1.6;
+.place-name {
+    font-size: 20px;
+    font-weight: 900;
+    margin: 12px 0 15px;
     overflow-wrap: anywhere;
 }
 
-.card strong {
-    color: #64748b;
+.details {
+    display: grid;
+    gap: 11px;
+}
+
+.detail-row {
+    border-top: 1px solid #edf3f7;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 12px;
     font-size: 13px;
-    display: block;
-    margin-bottom: 2px;
 }
 
-.place {
-    color: #075985;
-    font-size: 18px !important;
-    font-weight: bold;
+.detail-label {
+    flex-shrink: 0;
+    color: var(--muted);
 }
 
-/* データがないとき */
+.detail-value {
+    text-align: right;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
 .empty {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 60px 20px;
+    padding: 45px 18px;
     background: white;
-    border-radius: 16px;
-    border: 1px solid #dbeafe;
+    border: 1px dashed #b8dce9;
+    border-radius: 18px;
+    color: var(--muted);
 }
 
-.empty p {
-    color: #64748b;
+.empty strong {
+    display: block;
+    color: var(--navy);
+    font-size: 18px;
+    margin-bottom: 8px;
 }
 
-/* フッター */
 footer {
     text-align: center;
-    padding: 20px;
-    color: #64748b;
-    font-size: 13px;
+    color: var(--muted);
+    padding: 24px 15px 30px;
+    font-size: 12px;
 }
 
-/* スマートフォン・タブレット対応 */
 @media (max-width: 900px) {
-    .container {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 600px) {
-    header {
-        padding: 24px 15px;
-    }
-
-    header h1 {
-        font-size: 24px;
-    }
-
-    main {
-        padding: 20px 12px 30px;
-    }
-
-    .container {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .photo {
-        height: 240px;
-    }
+@media (max-width: 580px) {
+    .hero { padding: 28px 18px; }
+    main { padding: 20px 13px 32px; }
+    .container { grid-template-columns: 1fr; gap: 15px; }
+    .photo { height: 235px; }
+    .search-panel { padding: 14px; }
+    .list-heading h2 { font-size: 19px; }
 }
 </style>
 </head>
 
 <body>
-
-<header>
-    <h1>落とし物一覧</h1>
-    <p>探している落とし物がないか確認しよう</p>
+<header class="hero">
+    <div class="hero-inner">
+        <div class="brand">SCHOOL LOST &amp; FOUND</div>
+        <h1>落とし物を、<br>見つけよう。</h1>
+        <p>見つかったものをチェックして、自分の持ち物を探そう。</p>
+        <span class="hero-tag">✦ LOST ITEM SEARCH SYSTEM</span>
+    </div>
 </header>
 
 <main>
-    <div class="info">
-        <h2>📋 登録されている落とし物</h2>
-        <span class="count">
-            {{ data_list|length }} 件
-        </span>
-    </div>
-
-    <div class="container">
-        {% for data in data_list %}
-        <div class="card">
-
-            <img
-                class="photo"
-                src="{{ data.image }}"
-                alt="登録番号 {{ data.number }} の落とし物の写真"
-                loading="lazy"
+    <section class="search-panel">
+        <label class="search-label" for="searchInput">
+            🔎 落とし物を検索
+        </label>
+        <div class="search-row">
+            <input
+                id="searchInput"
+                class="search-input"
+                type="search"
+                placeholder="場所・詳細場所・登録番号で検索"
+                autocomplete="off"
             >
+            <button id="clearButton" class="clear-button" type="button">
+                クリア
+            </button>
+        </div>
 
-            <div class="card-content">
-                <div class="number">
-                    登録番号：{{ data.number }}
+        <div class="filter-label">発見場所で絞り込む</div>
+        <div class="filters" id="filters">
+            <button class="filter-button active" type="button"
+                    data-place="all">すべて</button>
+            {% set places = data_list | map(attribute='place') | unique | list %}
+            {% for place in places %}
+            <button class="filter-button" type="button"
+                    data-place="{{ place }}">{{ place }}</button>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section>
+        <div class="list-heading">
+            <div>
+                <h2>落とし物ファイル</h2>
+                <p>登録情報を確認しよう。</p>
+            </div>
+            <div class="result-count" id="resultCount">
+                {{ data_list|length }} 件
+            </div>
+        </div>
+
+        <div class="container" id="itemList">
+            {% for data in data_list %}
+            <article class="card"
+                     data-number="{{ data.number }}"
+                     data-place="{{ data.place }}"
+                     data-detail="{{ data.detail }}"
+                     data-date="{{ data.date }}"
+                     data-time="{{ data.time }}">
+                <div class="photo-wrap">
+                    <img
+                        class="photo"
+                        src="{{ data.image }}"
+                        alt="登録番号 {{ data.number }} の落とし物"
+                        loading="lazy"
+                    >
+                    <span class="case-number">
+                        CASE #{{ "%03d"|format(data.number|int) }}
+                    </span>
                 </div>
 
-                <p class="place">
-                    {{ data.place }}
-                </p>
+                <div class="card-content">
+                    <span class="place-tag">{{ data.place }}</span>
+                    <div class="place-name">{{ data.detail }}</div>
 
-                <p>
-                    <strong>詳細場所</strong>
-                    {{ data.detail }}
-                </p>
-
-                <p>
-                    <strong>発見した日</strong>
-                    {{ data.date }}
-                </p>
-
-                <p>
-                    <strong>発見した時刻</strong>
-                    {{ data.time }}
-                </p>
+                    <div class="details">
+                        <div class="detail-row">
+                            <span class="detail-label">登録番号</span>
+                            <span class="detail-value">{{ data.number }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">発見日</span>
+                            <span class="detail-value">{{ data.date }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">発見時刻</span>
+                            <span class="detail-value">{{ data.time }}</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty" id="noItems">
+                <strong>まだ落とし物の登録はありません</strong>
+                新しい情報が登録されると、ここに表示されます。
             </div>
+            {% endfor %}
 
+            <div class="empty" id="noResults" hidden>
+                <strong>見つかりませんでした</strong>
+                検索ワードや発見場所を変えてみてください。
+            </div>
         </div>
-        {% else %}
-        <div class="empty">
-            <h3>現在、登録されている落とし物はありません</h3>
-            <p>新しい落とし物が登録されると、ここに表示されます。</p>
-        </div>
-        {% endfor %}
-    </div>
+    </section>
 </main>
 
 <footer>
-    このページは5分ごとに自動更新されます。
+    SCHOOL LOST &amp; FOUND · このページは5分ごとに自動更新されます。
 </footer>
 
+<script>
+const searchInput = document.getElementById("searchInput");
+const clearButton = document.getElementById("clearButton");
+const filterButtons = document.querySelectorAll(".filter-button");
+const cards = Array.from(document.querySelectorAll(".card"));
+const resultCount = document.getElementById("resultCount");
+const noResults = document.getElementById("noResults");
+
+let selectedPlace = "all";
+
+function filterItems() {
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const text = [
+            card.dataset.number,
+            card.dataset.place,
+            card.dataset.detail,
+            card.dataset.date,
+            card.dataset.time
+        ].join(" ").toLowerCase();
+
+        const matchesQuery = text.includes(query);
+        const matchesPlace =
+            selectedPlace === "all" ||
+            card.dataset.place === selectedPlace;
+
+        const visible = matchesQuery && matchesPlace;
+        card.hidden = !visible;
+
+        if (visible) visibleCount++;
+    });
+
+    resultCount.textContent = visibleCount + " 件";
+    noResults.hidden = visibleCount !== 0 || cards.length === 0;
+}
+
+searchInput.addEventListener("input", filterItems);
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        selectedPlace = button.dataset.place;
+
+        filterButtons.forEach(item => {
+            const active = item === button;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-pressed", String(active));
+        });
+
+        filterItems();
+    });
+});
+
+clearButton.addEventListener("click", () => {
+    searchInput.value = "";
+    selectedPlace = "all";
+
+    filterButtons.forEach(button => {
+        const active = button.dataset.place === "all";
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+    });
+
+    filterItems();
+    searchInput.focus();
+});
+
+filterButtons.forEach(button => {
+    button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.place === "all")
+    );
+});
+</script>
 </body>
 </html>
