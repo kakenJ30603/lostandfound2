@@ -1,94 +1,258 @@
+
 <!DOCTYPE html>
-<html>
-
+<html lang="ja">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<!-- 300秒（5分）ごとに自動更新 -->
+<meta http-equiv="refresh" content="300">
 
-    <meta http-equiv="refresh" content="900">
+<title>落とし物一覧 | 学校</title>
 
-    <title>生徒用画面</title>
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
+body {
+    margin: 0;
+    font-family: "Noto Sans JP", sans-serif;
+    background: #f0f9ff;
+    color: #263746;
+}
 
-        body{
+/* ヘッダー */
+header {
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
 
-            margin: 0;
-            font-family: sans-serif;
-            background-color: #f0f0f0;
+header h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: 2px;
+}
 
-        }
+header p {
+    margin: 10px 0 0;
+    font-size: 14px;
+}
 
-        h1{
+/* メイン部分 */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 20px 40px;
+}
 
-            text-align: center;
-            padding: 20px;
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-        }
+.info h2 {
+    font-size: 21px;
+    margin: 0;
+}
 
-        .container{
+.count {
+    background: #dbeafe;
+    color: #0369a1;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
 
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            padding: 20px;
+/* 落とし物カード一覧 */
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
 
-        }
+.card {
+    background: white;
+    border: 1px solid #dbeafe;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
 
-        .card{
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.15);
+}
 
-            background-color: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 0 5px gray;
+.photo {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    background: #eaf7ff;
+    display: block;
+}
 
-        }
+.card-content {
+    padding: 18px;
+}
 
-        img{
+.number {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 5px 11px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
 
-            width: 100%;
-            border-radius: 10px;
+.card p {
+    margin: 10px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
 
-        }
+.card strong {
+    color: #64748b;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+}
 
-        p{
+.place {
+    color: #075985;
+    font-size: 18px !important;
+    font-weight: bold;
+}
 
-            font-size: 18px;
+/* データがないとき */
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #dbeafe;
+}
 
-        }
+.empty p {
+    color: #64748b;
+}
 
-    </style>
+/* フッター */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
+    font-size: 13px;
+}
 
+/* スマートフォン・タブレット対応 */
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 24px 15px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    main {
+        padding: 20px 12px 30px;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .photo {
+        height: 240px;
+    }
+}
+</style>
 </head>
 
 <body>
 
+<header>
     <h1>落とし物一覧</h1>
+    <p>探している落とし物がないか確認しよう</p>
+</header>
 
-    <div class="container">
-
-    {% for data in data_list %}
-
-        <div class="card">
-
-            <img src="{{ data.image }}">
-
-            <p>登録番号：{{ data.number }}</p>
-
-            <p>発見場所：{{ data.place }}</p>
-
-            <p>詳細場所：{{ data.detail }}</p>
-
-            <p>年月日：{{ data.date }}</p>
-
-            <p>時刻：{{ data.time }}</p>
-
-        </div>
-
-    {% endfor %}
-
+<main>
+    <div class="info">
+        <h2>📋 登録されている落とし物</h2>
+        <span class="count">
+            {{ data_list|length }} 件
+        </span>
     </div>
 
-</body>
+    <div class="container">
+        {% for data in data_list %}
+        <div class="card">
 
+            <img
+                class="photo"
+                src="{{ data.image }}"
+                alt="登録番号 {{ data.number }} の落とし物の写真"
+                loading="lazy"
+            >
+
+            <div class="card-content">
+                <div class="number">
+                    登録番号：{{ data.number }}
+                </div>
+
+                <p class="place">
+                    {{ data.place }}
+                </p>
+
+                <p>
+                    <strong>詳細場所</strong>
+                    {{ data.detail }}
+                </p>
+
+                <p>
+                    <strong>発見した日</strong>
+                    {{ data.date }}
+                </p>
+
+                <p>
+                    <strong>発見した時刻</strong>
+                    {{ data.time }}
+                </p>
+            </div>
+
+        </div>
+        {% else %}
+        <div class="empty">
+            <h3>現在、登録されている落とし物はありません</h3>
+            <p>新しい落とし物が登録されると、ここに表示されます。</p>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+<footer>
+    このページは5分ごとに自動更新されます。
+</footer>
+
+</body>
 </html>
