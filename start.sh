@@ -22,4 +22,4 @@ done
 sleep 5
 
 # Chromeを開く
-google-chrome "https://confusing-veneering-radish.ngrok-free.dev"
+google-chrome "https://lostandfound2-web.onrender.com/"
