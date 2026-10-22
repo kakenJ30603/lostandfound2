@@ -1,370 +1,251 @@
-```html
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>落とし物登録画面</title>
 
-    <style>
+<style>
+    :root {
+        --ink: #23445b;
+        --blue: #55b6df;
+        --sky: #dff5ff;
+        --pale: #f4fbff;
+        --line: #d8edf7;
+        --muted: #7895a7;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 48px 22px 70px;
+        font-family: "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+        color: var(--ink);
+        background: linear-gradient(135deg, #f4fbff, #e6f7ff, #ffffff);
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, #bceeff, #64c7eb, #398dbb);
+        z-index: 10;
+    }
+
+    h1 {
+        max-width: 900px;
+        margin: 0 auto;
+        color: #245879;
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-align: center;
+    }
+
+    h1::before {
+        content: "落とし物を見つけたら";
+        display: block;
+        margin-bottom: 12px;
+        color: #69b9d9;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: .15em;
+    }
+
+    h1::after {
+        content: "見つけた落とし物の情報を登録します";
+        display: block;
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: .03em;
+    }
+
+    form {
+        position: relative;
+        max-width: 760px;
+        margin: 32px auto 0;
+        padding: clamp(24px, 5vw, 48px);
+        background: rgba(255, 255, 255, .96);
+        border: 1px solid #dceff8;
+        border-radius: 24px;
+        box-shadow: 0 16px 45px rgba(63, 143, 179, .12);
+    }
+
+    form::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 4px;
+        border-radius: 0 0 8px 8px;
+        background: linear-gradient(90deg, #bceeff, #55b6df, #8dd9f2);
+    }
+
+    h2 {
+        margin: 30px 0 10px;
+        color: #326d8e;
+        font-size: 15px;
+        font-weight: 750;
+        letter-spacing: .04em;
+    }
+
+    h2:first-child {
+        margin-top: 0;
+    }
+
+    h2::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 16px;
+        margin: 0 10px -3px 0;
+        border-radius: 5px;
+        background: #70c9e8;
+    }
+
+    select,
+    input:not([type="hidden"]),
+    textarea {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-height: 50px;
+        margin-top: 6px;
+        padding: 13px 15px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        outline: none;
+        background: #fafdff;
+        color: var(--ink);
+        font: inherit;
+        font-size: 15px;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    select {
+        cursor: pointer;
+    }
+
+    select:hover,
+    input:hover,
+    textarea:hover {
+        border-color: #9bd9f0;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus {
+        border-color: #62c1e4;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(98, 193, 228, .16);
+    }
+
+    .timebox {
+        display: inline-block !important;
+        width: 112px !important;
+        max-width: 35%;
+        text-align: center;
+        font-weight: 650 !important;
+    }
+
+    .error {
+        margin: 7px 0 0;
+        color: #df6378;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    #camera,
+    #canvas {
+        display: none;
+    }
+
+    #status {
+        min-height: 20px;
+        margin: 20px 0 0;
+        color: #398ab0;
+        font-size: 13px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+
+    button {
+        display: block;
+        width: 100%;
+        min-height: 56px;
+        margin-top: 14px;
+        padding: 15px 22px;
+        border: 0;
+        border-radius: 14px;
+        background: linear-gradient(120deg, #65c5e8, #398fbd);
+        color: #fff;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 750;
+        letter-spacing: .12em;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(57, 143, 189, .22);
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+
+    button::after {
+        content: "  →";
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+    }
+
+    button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        filter: brightness(1.04);
+        box-shadow: 0 12px 25px rgba(57, 143, 189, .3);
+    }
+
+    button:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    button:disabled {
+        opacity: .55;
+        cursor: wait;
+        box-shadow: none;
+    }
+
+    @media (min-width: 700px) {
+        form {
+            padding: 42px 56px 46px;
+        }
+    }
+
+    @media (max-width: 480px) {
         body {
-            font-family: sans-serif;
-            margin: 30px;
-            max-width: 700px;
+            padding: 32px 14px 44px;
         }
 
-        select, input {
-            width: 250px;
-            max-width: 100%;
-            height: 45px;
-            font-size: 18px;
-            margin-top: 10px;
+        h1 {
+            font-size: 28px;
+        }
+
+        form {
+            margin-top: 24px;
+            padding: 25px 19px 28px;
+            border-radius: 18px;
         }
 
         .timebox {
-            width: 100px;
+            width: 42% !important;
+            max-width: 42%;
         }
+    }
 
-        button {
-            width: 220px;
-            height: 60px;
-            font-size: 24px;
-            margin-top: 30px;
-            cursor: pointer;
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition: none !important;
         }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: wait;
-        }
-
-        .error {
-            color: red;
-            font-size: 14px;
-        }
-
-        #camera, #canvas {
-            display: none;
-        }
-
-        #status {
-            color: blue;
-            font-size: 18px;
-            overflow-wrap: anywhere;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>落とし物登録画面</h1>
-
-    <form id="registerForm" action="/register" method="post">
-        <h2>発見場所</h2>
-
-        <select id="place" name="place" onchange="changeDetail()" required>
-            <option value="体育館">体育館</option>
-            <option value="実習棟">実習棟</option>
-            <option value="教室棟">教室棟</option>
-            <option value="管理棟">管理棟</option>
-            <option value="外">外</option>
-        </select>
-
-        <h2>詳細場所</h2>
-        <select id="detail" name="detail" required></select>
-
-        <h2>年月日</h2>
-        <input type="date" name="date" required>
-        <p id="dateError" class="error"></p>
-
-        <h2>見つけた時刻</h2>
-
-        <select class="timebox" name="hour" required>
-            <option value="00">00</option>
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-        </select>
-
-        ：
-        
-        <select class="timebox" name="minute" required>
-            <option value="00">00</option>
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
-            <option value="32">32</option>
-            <option value="33">33</option>
-            <option value="34">34</option>
-            <option value="35">35</option>
-            <option value="36">36</option>
-            <option value="37">37</option>
-            <option value="38">38</option>
-            <option value="39">39</option>
-            <option value="40">40</option>
-            <option value="41">41</option>
-            <option value="42">42</option>
-            <option value="43">43</option>
-            <option value="44">44</option>
-            <option value="45">45</option>
-            <option value="46">46</option>
-            <option value="47">47</option>
-            <option value="48">48</option>
-            <option value="49">49</option>
-            <option value="50">50</option>
-            <option value="51">51</option>
-            <option value="52">52</option>
-            <option value="53">53</option>
-            <option value="54">54</option>
-            <option value="55">55</option>
-            <option value="56">56</option>
-            <option value="57">57</option>
-            <option value="58">58</option>
-            <option value="59">59</option>
-        </select>
-
-        <p id="timeError" class="error"></p>
-
-        <!-- Cloudinaryに保存した写真のURL -->
-        <input type="hidden" name="image_url" id="image_url">
-
-        <video id="camera" autoplay playsinline></video>
-        <canvas id="canvas"></canvas>
-
-        <p id="status" role="status"></p>
-
-        <button type="submit" id="submitButton">確定</button>
-    </form>
-
-    <script>
-        // 発見場所に応じて詳細場所を変更する
-        function changeDetail() {
-            const place = document.getElementById("place").value;
-            const detail = document.getElementById("detail");
-
-            const options = {
-                "体育館": [
-                    "フロア", "トイレ", "女子更衣室", "男子更衣室",
-                    "柔道場", "フェンシング場", "レスリング場"
-                ],
-                "実習棟": [
-                    "J科実習棟", "K科実習棟", "M科実習棟",
-                    "F科実習棟", "EC科実習棟"
-                ],
-                "教室棟": [
-                    "J1教室前", "J2教室前", "J3教室前",
-                    "M1教室前", "M2教室前", "M3教室前",
-                    "F1教室前", "F2教室前", "F3教室前",
-                    "EC1教室前", "EC2教室前", "EC3教室前",
-                    "K1教室前", "K2教室前", "K3教室前"
-                ],
-                "管理棟": [
-                    "3階職員室前", "2階職員室前",
-                    "音楽室", "視聴覚室", "理科室"
-                ],
-                "外": [
-                    "野球場", "ハンドボール場", "サッカーグラウンド",
-                    "陸上競技場", "駐車場", "駐輪場"
-                ]
-            };
-
-            detail.innerHTML = "";
-
-            for (const name of (options[place] || [])) {
-                const option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                detail.appendChild(option);
-            }
-        }
-
-        // カメラで撮影し、Cloudinaryへアップロードする
-        async function uploadToCloudinary() {
-            const video = document.getElementById("camera");
-            const canvas = document.getElementById("canvas");
-            const status = document.getElementById("status");
-            let stream;
-
-            try {
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw new Error("このページではカメラを使用できません。HTTPSのURLで開いてください。");
-                }
-
-                status.textContent = "カメラを起動しています……";
-
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: false
-                });
-
-                video.srcObject = stream;
-
-                await new Promise((resolve, reject) => {
-                    if (video.readyState >= 1 && video.videoWidth > 0) {
-                        resolve();
-                        return;
-                    }
-
-                    const timeout = setTimeout(() => {
-                        reject(new Error("カメラの映像を取得できませんでした。"));
-                    }, 10000);
-
-                    video.onloadedmetadata = () => {
-                        clearTimeout(timeout);
-                        resolve();
-                    };
-                });
-
-                await video.play();
-                await new Promise(resolve => setTimeout(resolve, 800));
-
-                if (!video.videoWidth || !video.videoHeight) {
-                    throw new Error("カメラの映像が空です。");
-                }
-
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                const context = canvas.getContext("2d");
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const blob = await new Promise((resolve, reject) => {
-                    canvas.toBlob(result => {
-                        if (result) {
-                            resolve(result);
-                        } else {
-                            reject(new Error("写真を作成できませんでした。"));
-                        }
-                    }, "image/jpeg", 0.85);
-                });
-
-                status.textContent = "写真をアップロードしています……";
-
-                const formData = new FormData();
-                formData.append("file", blob, "lost.jpg");
-                formData.append("upload_preset", "lostandfound2");
-
-                const response = await fetch(
-                    "https://api.cloudinary.com/v1_1/qgl8mr0t/image/upload",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
-
-                const result = await response.json();
-
-                if (!response.ok || !result.secure_url) {
-                    throw new Error(
-                        result.error?.message || "Cloudinaryへのアップロードに失敗しました。"
-                    );
-                }
-
-                document.getElementById("image_url").value = result.secure_url;
-                status.textContent = "写真の保存が完了しました。";
-
-            } finally {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
-                video.srcObject = null;
-            }
-        }
-
-        // 確定ボタンを押したときの処理
-        document.getElementById("registerForm").addEventListener(
-            "submit",
-            async function(event) {
-                event.preventDefault();
-
-                const form = event.currentTarget;
-                const button = document.getElementById("submitButton");
-                const status = document.getElementById("status");
-
-                document.getElementById("dateError").textContent = "";
-                document.getElementById("timeError").textContent = "";
-
-                if (!form.elements.date.value) {
-                    document.getElementById("dateError").textContent =
-                        "※年月日を入力してください";
-                    return;
-                }
-
-                if (!form.elements.hour.value || !form.elements.minute.value) {
-                    document.getElementById("timeError").textContent =
-                        "※時刻を選択してください";
-                    return;
-                }
-
-                button.disabled = true;
-
-                try {
-                    await uploadToCloudinary();
-
-                    status.textContent = "登録しています……";
-                    form.submit();
-
-                } catch (error) {
-                    console.error(error);
-
-                    status.textContent =
-                        "失敗しました：" + (error.message || "カメラの使用を許可してください。");
-
-                    button.disabled = false;
-                }
-            }
-        );
-
-        // 最初の詳細場所を設定する
-        changeDetail();
-    </script>
-</body>
-</html>
-```
+    }
+</style>
