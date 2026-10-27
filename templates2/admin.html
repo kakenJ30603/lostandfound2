@@ -124,6 +124,7 @@
 
     <h1>落とし物 管理者画面</h1>
 
+    <!-- 全ての落とし物をリセット -->
     <div class="reset-area">
         <form action="/reset_all" method="POST"
               onsubmit="return confirm('登録済みの落とし物をすべて削除し、登録番号を1からに戻します。本当によろしいですか？')">
@@ -131,9 +132,11 @@
             <button type="submit" class="reset">
                 落とし物をリセット
             </button>
+
         </form>
     </div>
 
+    <!-- 落とし物一覧 -->
     <div class="container">
 
         {% for data in data_list %}
@@ -155,6 +158,7 @@
             <p>年月日：{{ data.date }}</p>
             <p>時刻：{{ data.time }}</p>
 
+            <!-- 個別削除 -->
             <form action="/delete/{{ data.number }}"
                   method="POST"
                   onsubmit="return confirm('この落とし物を削除しますか？')">
@@ -162,6 +166,7 @@
                 <button type="submit" class="delete">
                     この落とし物を削除
                 </button>
+
             </form>
 
         </div>
