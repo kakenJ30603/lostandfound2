@@ -1,6 +1,5 @@
 
-
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, jsonify
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -97,10 +96,16 @@ def register():
     image_url = request.form.get("image_url", "")
 
     if not all([place, detail, date, hour, minute]):
-        return "入力されていない項目があります", 400
+        return jsonify({
+            "success": False,
+            "message": "入力されていない項目があります。"
+        }), 400
 
     if not image_url:
-        return "写真のアップロードに失敗しました", 400
+        return jsonify({
+            "success": False,
+            "message": "写真のアップロードに失敗しました。"
+        }), 400
 
     time = f"{hour}:{minute}"
 
@@ -116,11 +121,18 @@ def register():
                     VALUES (%s, %s, %s, %s, %s)
                 """, (place, detail, date, time, image_url))
 
-        return redirect("/admin")
+        # 登録画面にとどまるため、JSONで成功を返す
+        return jsonify({
+            "success": True,
+            "message": "登録ありがとうございます！"
+        })
 
     except Exception:
         app.logger.exception("登録エラー")
-        return "登録できませんでした。Renderの設定を確認してください。", 500
+        return jsonify({
+            "success": False,
+            "message": "登録できませんでした。設定を確認してください。"
+        }), 500
 
     finally:
         if conn is not None:
@@ -135,7 +147,6 @@ def reset_all():
         with conn:
             create_table(conn)
             with conn.cursor() as cur:
-                # 全データを削除し、登録番号を1から再スタート
                 cur.execute(
                     "TRUNCATE TABLE lost_items RESTART IDENTITY"
                 )
