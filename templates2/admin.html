@@ -1,108 +1,180 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理者画面</title>
 
-<meta charset="UTF-8">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<title>管理者画面</title>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: #f0faff;
+            color: #23445b;
+        }
 
-<style>
+        h1 {
+            text-align: center;
+            color: #279bc9;
+            margin-bottom: 30px;
+        }
 
-body{
+        .reset-area {
+            text-align: center;
+            margin-bottom: 35px;
+        }
 
-    font-family:sans-serif;
-    margin:30px;
-}
+        .reset {
+            width: min(300px, 100%);
+            min-height: 55px;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #45b5df;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 12px #45b5df44;
+            transition: 0.2s;
+        }
 
-.card{
+        .reset:hover {
+            background: #269dcc;
+            transform: translateY(-2px);
+        }
 
-    border:1px solid black;
-    padding:20px;
-    margin:20px;
-    width:350px;
-}
+        .container {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(min(280px, 100%), 1fr)
+            );
+            gap: 22px;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-img{
+        .card {
+            background: white;
+            border: 1px solid #d7edf7;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 5px 18px #245b7510;
+            overflow-wrap: anywhere;
+        }
 
-    width:300px;
-}
+        .card img {
+            display: block;
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            background: #f4fbff;
+            border-radius: 12px;
+        }
 
-.delete{
+        .number {
+            color: #159aca;
+            font-size: 20px;
+            font-weight: bold;
+        }
 
-    width:120px;
-    height:40px;
-    font-size:18px;
-}
+        .card p {
+            line-height: 1.6;
+        }
 
-.reset{
+        .delete {
+            width: 100%;
+            min-height: 42px;
+            font-size: 16px;
+            color: #d34e5b;
+            background: #fff1f2;
+            border: 1px solid #ffd5da;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-    width:300px;
-    height:60px;
-    font-size:24px;
-    margin-bottom:30px;
-}
+        .delete:hover {
+            background: #ffe1e5;
+        }
 
-.container{
+        .empty {
+            text-align: center;
+            color: #7895a5;
+            padding: 30px;
+            grid-column: 1 / -1;
+        }
 
-    display:flex;
-    flex-wrap:wrap;
-}
-
-</style>
-
+        @media (max-width: 600px) {
+            body {
+                padding: 18px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>管理者画面</h1>
+    <h1>落とし物 管理者画面</h1>
 
-<a href="/reset_all"
-onclick="return confirm('本当に全て削除しますか？')">
+    <div class="reset-area">
+        <form action="/reset_all" method="POST"
+              onsubmit="return confirm('登録済みの落とし物をすべて削除し、登録番号を1からに戻します。本当によろしいですか？')">
 
-<button class="reset">
+            <button type="submit" class="reset">
+                落とし物をリセット
+            </button>
+        </form>
+    </div>
 
-すべての落とし物を削除
+    <div class="container">
 
-</button>
+        {% for data in data_list %}
 
-</a>
+        <div class="card">
 
-<div class="container">
+            <img
+                src="{{ data.image }}"
+                alt="登録番号{{ data.number }}の落とし物の写真"
+                loading="lazy"
+            >
 
-{% for data in data_list %}
+            <p class="number">
+                登録番号：{{ data.number }}
+            </p>
 
-<div class="card">
+            <p>発見場所：{{ data.place }}</p>
+            <p>詳細場所：{{ data.detail }}</p>
+            <p>年月日：{{ data.date }}</p>
+            <p>時刻：{{ data.time }}</p>
 
-<img src="/static2/images/{{ data.image }}">
+            <form action="/delete/{{ data.number }}"
+                  method="POST"
+                  onsubmit="return confirm('この落とし物を削除しますか？')">
 
-<p>登録番号：{{ data.number }}</p>
+                <button type="submit" class="delete">
+                    この落とし物を削除
+                </button>
+            </form>
 
-<p>発見場所：{{ data.place }}</p>
+        </div>
 
-<p>詳細場所：{{ data.detail }}</p>
+        {% else %}
 
-<p>年月日：{{ data.date }}</p>
+        <p class="empty">
+            現在、登録されている落とし物はありません。
+        </p>
 
-<p>時刻：{{ data.time }}</p>
+        {% endfor %}
 
-<a href="/delete/{{ data.number }}"
-onclick="return confirm('本当に削除しますか？')">
-
-<button class="delete">
-
-削除
-
-</button>
-
-</a>
-
-</div>
-
-{% endfor %}
-
-</div>
+    </div>
 
 </body>
-
 </html>

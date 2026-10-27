@@ -1,4 +1,5 @@
 
+
 from flask import Flask, request, render_template, redirect
 import os
 import psycopg2
@@ -126,7 +127,31 @@ def register():
             conn.close()
 
 
-@app.route("/delete/<number>")
+@app.route("/reset_all", methods=["POST"])
+def reset_all():
+    conn = None
+    try:
+        conn = get_connection()
+        with conn:
+            create_table(conn)
+            with conn.cursor() as cur:
+                # 全データを削除し、登録番号を1から再スタート
+                cur.execute(
+                    "TRUNCATE TABLE lost_items RESTART IDENTITY"
+                )
+
+        return redirect("/admin")
+
+    except Exception:
+        app.logger.exception("リセットエラー")
+        return "リセットできませんでした。設定を確認してください。", 500
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+@app.route("/delete/<number>", methods=["POST"])
 def delete(number):
     conn = None
     try:
@@ -138,7 +163,7 @@ def delete(number):
                     "DELETE FROM lost_items WHERE number = %s",
                     (number,)
                 )
-        return redirect("/")
+        return redirect("/admin")
 
     except Exception:
         app.logger.exception("削除エラー")
