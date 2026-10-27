@@ -1,721 +1,588 @@
 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>落とし物登録画面</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>落とし物登録</title>
 
-    <style>
-        :root {
-            --blue: #55b6df;
-            --blue-dark: #2189b7;
-            --sky: #e2f6ff;
-            --pale: #f5fbff;
-            --white: #ffffff;
-            --ink: #23445b;
-            --muted: #7895a8;
-            --line: #d8edf7;
-            --shadow: 0 12px 35px rgba(49, 139, 179, 0.13);
-        }
+<style>
+:root {
+    --blue: #55b6df;
+    --blue-dark: #258bb8;
+    --sky: #e4f6ff;
+    --pale: #f5fbff;
+    --ink: #23445b;
+    --muted: #7895a8;
+    --line: #d8edf7;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            padding: 32px 16px 48px;
-            font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
-            color: var(--ink);
-            background:
-                radial-gradient(circle at 10% 5%, #d9f4ff 0, transparent 28%),
-                radial-gradient(circle at 90% 25%, #eaf9ff 0, transparent 25%),
-                var(--pale);
-        }
+body {
+    margin: 0;
+    padding: 30px 15px 45px;
+    min-height: 100vh;
+    font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top left, #d8f4ff, transparent 35%),
+        radial-gradient(circle at bottom right, #e6f7ff, transparent 30%),
+        var(--pale);
+}
 
-        .container {
-            width: 100%;
-            max-width: 720px;
-            margin: 0 auto;
-        }
+.container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 26px;
-        }
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 66px;
-            height: 66px;
-            margin-bottom: 12px;
-            border-radius: 22px;
-            background: linear-gradient(135deg, #8cddf7, #4baedb);
-            color: white;
-            font-size: 31px;
-            box-shadow: 0 8px 20px rgba(70, 174, 216, 0.25);
-        }
+.logo {
+    display: inline-flex;
+    width: 65px;
+    height: 65px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #91e0fa, #4baedb);
+    color: white;
+    font-size: 32px;
+    box-shadow: 0 8px 20px #55b6df40;
+}
 
-        h1 {
-            margin: 0;
-            font-size: clamp(25px, 5vw, 33px);
-            letter-spacing: 0.04em;
-        }
+h1 {
+    margin: 0;
+    font-size: clamp(26px, 5vw, 34px);
+    letter-spacing: 0.05em;
+}
 
-        .subtitle {
-            margin: 10px 0 0;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.8;
-        }
+.subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
 
-        .card {
-            padding: clamp(22px, 5vw, 38px);
-            background: var(--white);
-            border: 1px solid rgba(216, 237, 247, 0.9);
-            border-radius: 25px;
-            box-shadow: var(--shadow);
-        }
+.card {
+    padding: clamp(22px, 5vw, 38px);
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 12px 35px #318bb31f;
+}
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 24px;
-            font-size: 19px;
-        }
+h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 25px;
+    font-size: 19px;
+}
 
-        .section-title::before {
-            content: "";
-            width: 5px;
-            height: 23px;
-            border-radius: 10px;
-            background: var(--blue);
-        }
+h2::before {
+    content: "";
+    width: 5px;
+    height: 23px;
+    border-radius: 5px;
+    background: var(--blue);
+}
 
-        .field {
-            margin-bottom: 22px;
-        }
+.field {
+    margin-bottom: 22px;
+}
 
-        label {
-            display: block;
-            margin-bottom: 9px;
-            font-size: 14px;
-            font-weight: 700;
-        }
+label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-weight: 700;
+}
 
-        .required {
-            display: inline-block;
-            margin-left: 7px;
-            padding: 2px 7px;
-            border-radius: 6px;
-            background: #e8f7ff;
-            color: var(--blue-dark);
-            font-size: 10px;
-            vertical-align: 2px;
-        }
+.required {
+    display: inline-block;
+    margin-left: 7px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    color: var(--blue-dark);
+    background: var(--sky);
+    font-size: 10px;
+}
 
-        input,
-        select {
-            width: 100%;
-            min-height: 49px;
-            padding: 12px 14px;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            outline: none;
-            background: #fbfdff;
-            color: var(--ink);
-            font: inherit;
-            font-size: 14px;
-            transition: border-color 0.2s, box-shadow 0.2s,
-                background 0.2s;
-        }
+input,
+select {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    outline: none;
+    background: #fbfdff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    transition: 0.2s;
+}
 
-        input:focus,
-        select:focus {
-            border-color: var(--blue);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(85, 182, 223, 0.14);
-        }
+input:focus,
+select:focus {
+    border-color: var(--blue);
+    background: white;
+    box-shadow: 0 0 0 4px #55b6df24;
+}
 
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
+.time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
 
-        .time-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+.photo-box {
+    padding: 22px 15px;
+    border: 1px dashed #a7dff3;
+    border-radius: 16px;
+    background: #f4fbff;
+    text-align: center;
+}
 
-        .help {
-            margin: 8px 0 0;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.7;
-        }
+.photo-icon {
+    margin-bottom: 8px;
+    font-size: 30px;
+}
 
-        .photo-box {
-            padding: 18px;
-            border: 1px dashed #a7dff3;
-            border-radius: 16px;
-            background: #f4fbff;
-            text-align: center;
-        }
+.photo-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
 
-        .photo-icon {
-            font-size: 30px;
-            margin-bottom: 5px;
-        }
+.photo-help {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
 
-        .photo-title {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 700;
-        }
+#camera,
+#canvas {
+    display: none;
+}
 
-        .photo-description {
-            margin: 7px 0 0;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.7;
-        }
+button {
+    font: inherit;
+}
 
-        #camera,
-        #canvas {
-            display: none;
-        }
+.submit-button {
+    width: 100%;
+    min-height: 55px;
+    margin-top: 8px;
+    border: 0;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #70cbed, #39a6d7);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    box-shadow: 0 8px 18px #39a6d73d;
+    transition: 0.2s;
+}
 
-        .submit-button {
-            width: 100%;
-            min-height: 55px;
-            margin-top: 8px;
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #70cbed, #39a6d7);
-            color: white;
-            font: inherit;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            cursor: pointer;
-            box-shadow: 0 8px 18px rgba(57, 166, 215, 0.24);
-            transition: transform 0.2s, box-shadow 0.2s,
-                opacity 0.2s;
-        }
+.submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px #39a6d74d;
+}
 
-        .submit-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 22px rgba(57, 166, 215, 0.3);
-        }
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
 
-        .submit-button:disabled {
-            cursor: wait;
-            opacity: 0.6;
-        }
+#status {
+    display: none;
+    margin: 18px 0 0;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.8;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
 
-        #status {
-            display: none;
-            margin: 18px 0 0;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.7;
-            text-align: center;
-            overflow-wrap: anywhere;
-        }
+#status.show {
+    display: block;
+}
 
-        #status.show {
-            display: block;
-        }
+#status.success {
+    background: #e9f9f0;
+    color: #24784a;
+    border: 1px solid #c5ecd5;
+}
 
-        #status.success {
-            background: #e9f9f0;
-            color: #24784a;
-            border: 1px solid #c5ecd5;
-        }
+#status.error {
+    background: #fff0f0;
+    color: #b43d3d;
+    border: 1px solid #f3cccc;
+}
 
-        #status.error {
-            background: #fff0f0;
-            color: #b43d3d;
-            border: 1px solid #f3cccc;
-        }
+#status.loading {
+    background: #eef9ff;
+    color: #287fa7;
+    border: 1px solid #ccecf9;
+}
 
-        #status.loading {
-            background: #eef9ff;
-            color: #287fa7;
-            border: 1px solid #ccecf9;
-        }
+.footer {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
 
-        .footer {
-            margin-top: 22px;
-            color: var(--muted);
-            font-size: 12px;
-            text-align: center;
-        }
+@media (max-width: 480px) {
+    body {
+        padding: 22px 12px 32px;
+    }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 22px 12px 32px;
-            }
-
-            .card {
-                border-radius: 20px;
-            }
-
-            .two-columns {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-        }
-    </style>
+    .card {
+        border-radius: 20px;
+    }
+}
+</style>
 </head>
 
 <body>
-    <main class="container">
-        <header class="header">
-            <div class="logo" aria-hidden="true">☁</div>
-            <h1>落とし物登録</h1>
-            <p class="subtitle">
-                見つけた落とし物を登録して、<br>
-                持ち主が見つけられるようにしましょう。
-            </p>
-        </header>
+<main class="container">
 
-        <section class="card">
-            <h2 class="section-title">落とし物の情報</h2>
+    <header>
+        <div class="logo" aria-hidden="true">☁</div>
+        <h1>落とし物登録</h1>
+        <p class="subtitle">
+            見つけた落とし物を登録して、<br>
+            持ち主が見つけられるようにしましょう。
+        </p>
+    </header>
 
-            <form id="registerForm" action="/register" method="post">
-                <div class="field">
-                    <label for="place">
-                        発見場所<span class="required">必須</span>
-                    </label>
-                    <select
-                        id="place"
-                        name="place"
-                        required
-                        onchange="changeDetail()"
-                    >
-                        <option value="">場所を選択してください</option>
-                        <option value="体育館">体育館</option>
-                        <option value="実習棟">実習棟</option>
-                        <option value="教室棟">教室棟</option>
-                        <option value="管理棟">管理棟</option>
-                        <option value="外">外</option>
+    <section class="card">
+        <h2>落とし物の情報</h2>
+
+        <form id="registerForm" action="/register" method="post">
+
+            <div class="field">
+                <label for="place">
+                    発見場所<span class="required">必須</span>
+                </label>
+                <select id="place" name="place" required>
+                    <option value="">場所を選択してください</option>
+                    <option value="体育館">体育館</option>
+                    <option value="実習棟">実習棟</option>
+                    <option value="教室棟">教室棟</option>
+                    <option value="管理棟">管理棟</option>
+                    <option value="外">外</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="detail">
+                    詳細場所<span class="required">必須</span>
+                </label>
+                <select id="detail" name="detail" required>
+                    <option value="">先に発見場所を選択してください</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="date">
+                    発見した日付<span class="required">必須</span>
+                </label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="field">
+                <label>発見した時刻<span class="required">必須</span></label>
+                <div class="time-grid">
+                    <select id="hour" name="hour" required>
+                        <option value="">時を選択</option>
+                    </select>
+                    <select id="minute" name="minute" required>
+                        <option value="">分を選択</option>
                     </select>
                 </div>
+            </div>
 
-                <div class="field">
-                    <label for="detail">
-                        詳細場所<span class="required">必須</span>
-                    </label>
-                    <select id="detail" name="detail" required>
-                        <option value="">先に発見場所を選択してください</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="date">
-                        発見した日付<span class="required">必須</span>
-                    </label>
-                    <input type="date" id="date" name="date" required>
-                </div>
-
-                <div class="field">
-                    <label>
-                        発見した時刻<span class="required">必須</span>
-                    </label>
-                    <div class="time-columns">
-                        <select id="hour" name="hour" required>
-                            <option value="">時</option>
-                            <option value="00">00時</option>
-                            <option value="01">01時</option>
-                            <option value="02">02時</option>
-                            <option value="03">03時</option>
-                            <option value="04">04時</option>
-                            <option value="05">05時</option>
-                            <option value="06">06時</option>
-                            <option value="07">07時</option>
-                            <option value="08">08時</option>
-                            <option value="09">09時</option>
-                            <option value="10">10時</option>
-                            <option value="11">11時</option>
-                            <option value="12">12時</option>
-                            <option value="13">13時</option>
-                            <option value="14">14時</option>
-                            <option value="15">15時</option>
-                            <option value="16">16時</option>
-                            <option value="17">17時</option>
-                            <option value="18">18時</option>
-                            <option value="19">19時</option>
-                            <option value="20">20時</option>
-                            <option value="21">21時</option>
-                            <option value="22">22時</option>
-                            <option value="23">23時</option>
-                        </select>
-
-                        <select id="minute" name="minute" required>
-                            <option value="">分</option>
-                            <option value="00">00分</option>
-                            <option value="01">01分</option>
-                            <option value="02">02分</option>
-                            <option value="03">03分</option>
-                            <option value="04">04分</option>
-                            <option value="05">05分</option>
-                            <option value="06">06分</option>
-                            <option value="07">07分</option>
-                            <option value="08">08分</option>
-                            <option value="09">09分</option>
-                            <option value="10">10分</option>
-                            <option value="11">11分</option>
-                            <option value="12">12分</option>
-                            <option value="13">13分</option>
-                            <option value="14">14分</option>
-                            <option value="15">15分</option>
-                            <option value="16">16分</option>
-                            <option value="17">17分</option>
-                            <option value="18">18分</option>
-                            <option value="19">19分</option>
-                            <option value="20">20分</option>
-                            <option value="21">21分</option>
-                            <option value="22">22分</option>
-                            <option value="23">23分</option>
-                            <option value="24">24分</option>
-                            <option value="25">25分</option>
-                            <option value="26">26分</option>
-                            <option value="27">27分</option>
-                            <option value="28">28分</option>
-                            <option value="29">29分</option>
-                            <option value="30">30分</option>
-                            <option value="31">31分</option>
-                            <option value="32">32分</option>
-                            <option value="33">33分</option>
-                            <option value="34">34分</option>
-                            <option value="35">35分</option>
-                            <option value="36">36分</option>
-                            <option value="37">37分</option>
-                            <option value="38">38分</option>
-                            <option value="39">39分</option>
-                            <option value="40">40分</option>
-                            <option value="41">41分</option>
-                            <option value="42">42分</option>
-                            <option value="43">43分</option>
-                            <option value="44">44分</option>
-                            <option value="45">45分</option>
-                            <option value="46">46分</option>
-                            <option value="47">47分</option>
-                            <option value="48">48分</option>
-                            <option value="49">49分</option>
-                            <option value="50">50分</option>
-                            <option value="51">51分</option>
-                            <option value="52">52分</option>
-                            <option value="53">53分</option>
-                            <option value="54">54分</option>
-                            <option value="55">55分</option>
-                            <option value="56">56分</option>
-                            <option value="57">57分</option>
-                            <option value="58">58分</option>
-                            <option value="59">59分</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label>落とし物の写真</label>
-                    <div class="photo-box">
-                        <div class="photo-icon" aria-hidden="true">📷</div>
-                        <p class="photo-title">カメラで写真を撮影します</p>
-                        <p class="photo-description">
-                            「登録する」を押すとカメラが起動し、<br>
-                            写真を保存してから登録します。
-                        </p>
-                    </div>
-                    <p class="help">
-                        ※ カメラの使用許可が表示されたら「許可」を選んでください。
+            <div class="field">
+                <label>落とし物の写真</label>
+                <div class="photo-box">
+                    <div class="photo-icon" aria-hidden="true">📷</div>
+                    <p class="photo-title">カメラで写真を撮影します</p>
+                    <p class="photo-help">
+                        「登録する」を押すとカメラが起動し、<br>
+                        写真を保存してから登録します。
                     </p>
                 </div>
+                <p class="photo-help">
+                    ※ カメラの使用許可が表示されたら「許可」を選んでください。
+                </p>
+            </div>
 
-                <input type="hidden" name="image_url" id="image_url">
+            <input type="hidden" name="image_url" id="image_url">
+            <video id="camera" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
 
-                <video id="camera" autoplay playsinline></video>
-                <canvas id="canvas"></canvas>
+            <button type="submit" class="submit-button" id="submitButton">
+                登録する
+            </button>
 
-                <button type="submit" class="submit-button" id="submitButton">
-                    登録する
-                </button>
+            <p id="status" role="status" aria-live="polite"></p>
+        </form>
+    </section>
 
-                <p id="status" role="status" aria-live="polite"></p>
-            </form>
-        </section>
+    <p class="footer">
+        落とし物を見つけた人と、持ち主をつなぐシステム
+    </p>
+</main>
 
-        <p class="footer">
-            落とし物を見つけた人と、持ち主をつなぐシステム
-        </p>
-    </main>
+<script>
+"use strict";
 
-    <script>
-        const form = document.getElementById("registerForm");
-        const placeSelect = document.getElementById("place");
-        const detailSelect = document.getElementById("detail");
-        const dateInput = document.getElementById("date");
-        const camera = document.getElementById("camera");
-        const canvas = document.getElementById("canvas");
-        const imageUrlInput = document.getElementById("image_url");
-        const statusMessage = document.getElementById("status");
-        const submitButton = document.getElementById("submitButton");
+const form = document.getElementById("registerForm");
+const placeSelect = document.getElementById("place");
+const detailSelect = document.getElementById("detail");
+const dateInput = document.getElementById("date");
+const hourSelect = document.getElementById("hour");
+const minuteSelect = document.getElementById("minute");
+const camera = document.getElementById("camera");
+const canvas = document.getElementById("canvas");
+const imageUrlInput = document.getElementById("image_url");
+const statusMessage = document.getElementById("status");
+const submitButton = document.getElementById("submitButton");
 
-        const CLOUDINARY_URL =
-            "https://api.cloudinary.com/v1_1/qgl8mr0t/image/upload";
-        const CLOUDINARY_UPLOAD_PRESET = "lostandfound2";
+const CLOUDINARY_URL =
+    "https://api.cloudinary.com/v1_1/qgl8mr0t/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = "lostandfound2";
 
-        const detailOptions = {
-            "体育館": [
-                "フロア",
-                "トイレ",
-                "女子更衣室",
-                "男子更衣室",
-                "柔道場",
-                "フェンシング場",
-                "レスリング場"
-            ],
-            "実習棟": [
-                "J科実習棟",
-                "K科実習棟",
-                "M科実習棟",
-                "F科実習棟",
-                "EC科実習棟"
-            ],
-            "教室棟": [
-                "J1教室前",
-                "J2教室前",
-                "J3教室前",
-                "M1教室前",
-                "M2教室前",
-                "M3教室前",
-                "F1教室前",
-                "F2教室前",
-                "F3教室前",
-                "EC1教室前",
-                "EC2教室前",
-                "EC3教室前",
-                "K1教室前",
-                "K2教室前",
-                "K3教室前"
-            ],
-            "管理棟": [
-                "3階職員室前",
-                "2階職員室前",
-                "音楽室",
-                "視聴覚室",
-                "理科室"
-            ],
-            "外": [
-                "野球場",
-                "ハンドボール場",
-                "サッカーグラウンド",
-                "陸上競技場",
-                "駐車場",
-                "駐輪場"
-            ]
-        };
+const detailOptions = {
+    "体育館": [
+        "フロア", "トイレ", "女子更衣室", "男子更衣室",
+        "柔道場", "フェンシング場", "レスリング場"
+    ],
+    "実習棟": [
+        "J科実習棟", "K科実習棟", "M科実習棟",
+        "F科実習棟", "EC科実習棟"
+    ],
+    "教室棟": [
+        "J1教室前", "J2教室前", "J3教室前",
+        "M1教室前", "M2教室前", "M3教室前",
+        "F1教室前", "F2教室前", "F3教室前",
+        "EC1教室前", "EC2教室前", "EC3教室前",
+        "K1教室前", "K2教室前", "K3教室前"
+    ],
+    "管理棟": [
+        "3階職員室前", "2階職員室前",
+        "音楽室", "視聴覚室", "理科室"
+    ],
+    "外": [
+        "野球場", "ハンドボール場", "サッカーグラウンド",
+        "陸上競技場", "駐車場", "駐輪場"
+    ]
+};
 
-        function changeDetail() {
-            const selectedPlace = placeSelect.value;
-            const options = detailOptions[selectedPlace] || [];
+function changeDetail() {
+    const options = detailOptions[placeSelect.value] || [];
+    detailSelect.replaceChildren();
 
-            detailSelect.innerHTML = "";
+    const first = document.createElement("option");
+    first.value = "";
+    first.textContent = options.length
+        ? "詳細場所を選択してください"
+        : "先に発見場所を選択してください";
+    detailSelect.appendChild(first);
 
-            const firstOption = document.createElement("option");
-            firstOption.value = "";
-            firstOption.textContent = options.length
-                ? "詳細場所を選択してください"
-                : "先に発見場所を選択してください";
+    options.forEach(function (name) {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        detailSelect.appendChild(option);
+    });
+}
 
-            detailSelect.appendChild(firstOption);
+function fillTimeOptions(select, max, suffix) {
+    for (let i = 0; i <= max; i++) {
+        const value = String(i).padStart(2, "0");
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value + suffix;
+        select.appendChild(option);
+    }
+}
 
-            options.forEach(function (detail) {
-                const option = document.createElement("option");
-                option.value = detail;
-                option.textContent = detail;
-                detailSelect.appendChild(option);
-            });
-        }
+function setToday() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    dateInput.value = `${year}-${month}-${day}`;
+}
 
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = "show " + type;
-        }
+function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = "show " + type;
+}
 
-        function setToday() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, "0");
-            const day = String(now.getDate()).padStart(2, "0");
+async function takeAndUploadPhoto() {
+    let stream;
 
-            dateInput.value = `${year}-${month}-${day}`;
-        }
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } },
+            audio: false
+        });
 
-        function waitForCamera(video) {
-            return new Promise(function (resolve, reject) {
-                if (video.readyState >= 2 && video.videoWidth > 0) {
-                    resolve();
-                    return;
-                }
+        camera.srcObject = stream;
+        await camera.play();
 
-                video.onloadedmetadata = function () {
-                    video.play().then(resolve).catch(reject);
-                };
-
-                video.onerror = function () {
-                    reject(new Error("カメラを読み込めませんでした。"));
-                };
-            });
-        }
-
-        async function uploadToCloudinary() {
-            let stream = null;
-
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: { ideal: "environment" }
-                    },
-                    audio: false
-                });
-
-                camera.srcObject = stream;
-                await camera.play();
-                await waitForCamera(camera);
-
-                if (!camera.videoWidth || !camera.videoHeight) {
-                    throw new Error("カメラの映像を取得できませんでした。");
-                }
-
-                canvas.width = camera.videoWidth;
-                canvas.height = camera.videoHeight;
-
-                const context = canvas.getContext("2d");
-                context.drawImage(
-                    camera,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                const blob = await new Promise(function (resolve, reject) {
-                    canvas.toBlob(function (result) {
-                        if (result) {
-                            resolve(result);
-                        } else {
-                            reject(new Error("写真を作成できませんでした。"));
-                        }
-                    }, "image/jpeg", 0.85);
-                });
-
-                const uploadData = new FormData();
-                uploadData.append("file", blob, "lost-item.jpg");
-                uploadData.append(
-                    "upload_preset",
-                    CLOUDINARY_UPLOAD_PRESET
-                );
-
-                const response = await fetch(CLOUDINARY_URL, {
-                    method: "POST",
-                    body: uploadData
-                });
-
-                const result = await response.json();
-
-                if (!response.ok || !result.secure_url) {
-                    throw new Error(
-                        result.error?.message ||
-                        "写真の保存に失敗しました。"
-                    );
-                }
-
-                imageUrlInput.value = result.secure_url;
-            } finally {
-                if (stream) {
-                    stream.getTracks().forEach(function (track) {
-                        track.stop();
-                    });
-                }
-                camera.srcObject = null;
-            }
-        }
-
-        form.addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-            if (!form.reportValidity()) {
+        await new Promise(function (resolve, reject) {
+            if (camera.videoWidth > 0 && camera.videoHeight > 0) {
+                resolve();
                 return;
             }
 
-            if (!navigator.mediaDevices ||
-                !navigator.mediaDevices.getUserMedia) {
-                showStatus(
-                    "この環境ではカメラを使用できません。HTTPSで開いているか確認してください。",
-                    "error"
-                );
-                return;
-            }
+            camera.onloadedmetadata = resolve;
+            camera.onerror = function () {
+                reject(new Error("カメラの映像を取得できませんでした。"));
+            };
+        });
 
-            submitButton.disabled = true;
-            imageUrlInput.value = "";
+        if (!camera.videoWidth || !camera.videoHeight) {
+            throw new Error("カメラの映像を取得できませんでした。");
+        }
 
-            try {
-                showStatus("📷 写真を撮影しています……", "loading");
-                await uploadToCloudinary();
+        canvas.width = camera.videoWidth;
+        canvas.height = camera.videoHeight;
 
-                showStatus("登録しています……", "loading");
+        const context = canvas.getContext("2d");
+        context.drawImage(camera, 0, 0, canvas.width, canvas.height);
 
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: new FormData(form)
-                });
+        const blob = await new Promise(function (resolve, reject) {
+            canvas.toBlob(function (result) {
+                if (result) resolve(result);
+                else reject(new Error("写真を作成できませんでした。"));
+            }, "image/jpeg", 0.85);
+        });
 
-                let result;
-                try {
-                    result = await response.json();
-                } catch {
-                    throw new Error(
-                        "サーバーから正しい返事がありませんでした。app.pyを確認してください。"
-                    );
-                }
+        const uploadData = new FormData();
+        uploadData.append("file", blob, "lost-item.jpg");
+        uploadData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-                if (!response.ok || !result.success) {
-                    throw new Error(
-                        result.message || "登録に失敗しました。"
-                    );
-                }
+        const response = await fetch(CLOUDINARY_URL, {
+            method: "POST",
+            body: uploadData
+        });
 
-                showStatus("🎉 登録ありがとうございます！", "success");
+        const result = await response.json();
 
-                form.reset();
-                imageUrlInput.value = "";
-                changeDetail();
-                setToday();
+        if (!response.ok || !result.secure_url) {
+            throw new Error(
+                result.error?.message || "写真の保存に失敗しました。"
+            );
+        }
 
-            } catch (error) {
-                console.error("登録エラー:", error);
-                showStatus(
-                    "登録できませんでした：" + error.message,
-                    "error"
-                );
-            } finally {
-                submitButton.disabled = false;
+        imageUrlInput.value = result.secure_url;
+    } finally {
+        if (stream) {
+            stream.getTracks().forEach(function (track) {
+                track.stop();
+            });
+        }
+        camera.srcObject = null;
+    }
+}
+
+/*
+ * 重要：
+ * submitイベントの最初にpreventDefault()を実行する。
+ * これにより、通常のフォーム送信で/registerの画面に
+ * 移動してしまうことを防ぐ。
+ */
+form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!form.reportValidity()) return;
+
+    if (submitButton.disabled) return;
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+        showStatus(
+            "カメラを利用できません。HTTPSで開いているか確認してください。",
+            "error"
+        );
+        return;
+    }
+
+    submitButton.disabled = true;
+    imageUrlInput.value = "";
+
+    try {
+        showStatus("📷 写真を撮影しています……", "loading");
+        await takeAndUploadPhoto();
+
+        showStatus("登録しています……", "loading");
+
+        /*
+         * fetchで送信するため、ページは移動しない。
+         * app.pyがJSONを返す必要がある。
+         */
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: {
+                "Accept": "application/json"
             }
         });
 
+        let result;
+
+        try {
+            result = await response.json();
+        } catch {
+            throw new Error(
+                "サーバーの返事を読み取れません。app.pyの/registerを確認してください。"
+            );
+        }
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "登録に失敗しました。");
+        }
+
+        showStatus("🎉 登録ありがとうございます！", "success");
+
+        form.reset();
+        imageUrlInput.value = "";
         changeDetail();
         setToday();
-    </script>
+
+    } catch (error) {
+        console.error("登録エラー:", error);
+        showStatus("登録できませんでした：" + error.message, "error");
+    } finally {
+        submitButton.disabled = false;
+    }
+});
+
+placeSelect.addEventListener("change", changeDetail);
+
+fillTimeOptions(hourSelect, 23, "時");
+fillTimeOptions(minuteSelect, 59, "分");
+changeDetail();
+setToday();
+</script>
 </body>
 </html>
